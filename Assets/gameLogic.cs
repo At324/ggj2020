@@ -16,4 +16,27 @@ public class gameLogic : MonoBehaviour
     {
         
     }
+    void OnMessage(int fromDeviceID, JToken data) {
+        Debug.Log("message from" + fromDeviceID + ", data: " + data);
+        if(data["action"] != null && data["action"].ToString().Equals("interact1")){
+            Camera.main.backgroundColor = new Color(255,0,0);
+        }
+        if(data["action"] != null && data["action"].ToString().Equals("interact2")){
+            Camera.main.backgroundColor = new Color (0,255,0);
+        }
+        if(data["action"] != null && data["action"].ToString().Equals("interact3")){
+            Camera.main.backgroundColor = new Color (0,0,255);
+        }
+        if(data["action"] != null && data["action"].ToString().Equals("interact4")){
+            Camera.main.backgroundColor = new Color (255,255,0);
+        }
+    }
+
+
+    void OnDestroy (){
+        //unregister events
+        if(AirConsole.instance != null){
+            AirConsole.instance.onMessage -= OnMessage;
+        }
+    }
 }

@@ -6,14 +6,54 @@
   <style type=text/css>
   /* the style sheet dictates what our elements (buttons, backgrounds etc.) will look like. */
 
+  .button{
+    background: #3B3B3B;
+    font-size: 14px;
+    padding: 5px 10px 5px 10px;
+    border: solid #1f1f1f 2px;
+    height: 100%;
+    position: absolute;
+  }
+
+  #top-left-button{
+  	left: 0;
+    top: 0;
+  	width: 50%;
+  	height: 50%;
+  }
+
+  #top-right-button{
+  	right: 0;
+    top: 0;
+  	width: 50%;
+  	height: 50%;
+  }
+
+  #bottom-left-button{
+	  left: 0;
+  	bottom: 0;
+  	width: 50%;
+  	height: 50%;
+  }
+
+  #bottom-right-button{
+  	right: 0;
+  	bottom: 0;
+  	width: 50%;
+  	height: 50%;
+  }
+
   </style>
   
   <script type="text/javascript">
+
+    var airconsole;
 
     function App() {
 
     /* JavaScript / Functionality. Add functions and evens here */ 
 
+      this.airconsole = new AirConsole({"orientation": "portrait"});
       
       /*
        * Here we are adding support for mouse events manually.
@@ -41,13 +81,19 @@
     }
 
 
+
+    App.prototype.sendMessageToScreen = function(msg){
+      console.log("butotn pressed");
+      this.airconsole.message(AirConsole.SCREEN, {"action":msg});
+    };
+
   </script>
 </head>
 <body onload="window.app = new App()">
   <!-- Add your HTML elements here -->
-  <div class="button1" ontouchstart="window.app.sendMessageToScreen('interact')">interact</div>
-  <div class="button2" ontouchstart="window.app.sendMessageToScreen('interact')">interact</div>
-  <div class="button3" ontouchstart="window.app.sendMessageToScreen('interact')">interact</div>
-  <div class="button4" ontouchstart="window.app.sendMessageToScreen('interact')">interact</div>
+  <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('interact1')">A</div>
+  <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('interact2')">B</div>
+  <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('interact3')">C</div>
+  <div class="button" id="bottom-right-button" ontouchstart="window.app.sendMessageToScreen('interact4')">D</div>
 </body>
 </html>
