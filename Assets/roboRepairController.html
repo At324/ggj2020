@@ -82,7 +82,10 @@
 
     App.prototype.sendMessageToScreen = function(msg){
       console.log("butotn pressed");
-      this.airconsole.message(AirConsole.SCREEN, {"action":msg});
+      var message = {
+        'action':msg
+      }
+      this.airconsole.message(AirConsole.SCREEN, message);
     };
 
   </script>
