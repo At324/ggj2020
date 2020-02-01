@@ -55,15 +55,18 @@ public class GameManager : MonoBehaviour
     void FixedUpdate()
     {
         count -= Time.deltaTime;
+        if (count < 0.0f)
+            count = 0.0f;
 
         //string minutes = ((int)count / 60).ToString();
         //string seconds = (count % 60).ToString("f2");
 
-        clock2.text = "" + Mathf.Round(count);
+        if (clock2 != null)
+            clock2.text = "" + Mathf.Round(count);
 
         if (count < 0)
         {
-            
+            EndRound();
         }
     }
 
@@ -72,7 +75,12 @@ public class GameManager : MonoBehaviour
      */
     public void PassRound()
     {
+        round_num++;
+        difficulty_modifier += Random.Range(0.25f, 1.0f);
 
+        RobotGenerator.Instance.RandomizeRobot();
+
+        Debug.LogFormat("Round number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
     }
 
     /**
@@ -83,8 +91,14 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /**
+     * @brief Time's up, let's check to see if the pattern was right or not
+     */
     public void EndRound()
     {
-
+        //if pattern correct
+            //pass round
+        //else
+            //fail round
     }
 }
