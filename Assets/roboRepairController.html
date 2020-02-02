@@ -30,7 +30,6 @@
 
   #top-button{
     background-image: url('play.png');
-    
   	left: 0;
     top: 0;
   	width: 100%;
@@ -40,7 +39,6 @@
 
   #bottom-button{
     background-image: url('credits.png');
-    
 	  left: 0;
   	bottom: 0;
   	width: 100%;
@@ -52,6 +50,7 @@
     top: 0;
   	width: 50%;
   	height: 50%;
+    background-image: url('wrench.png');
   }
 
   #top-right-button{
@@ -59,6 +58,7 @@
     top: 0;
   	width: 50%;
   	height: 50%;
+    background-image: url('hammer.png');
   }
 
   #bottom-left-button{
@@ -66,6 +66,7 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
+    background-image: url('pliers.png');
   }
 
   #bottom-right-button{
@@ -73,6 +74,7 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
+    background-image: url('tape.png');
   }
 
   </style>
@@ -84,10 +86,10 @@
 
   <!--game controlls-->
   <div id="game-controlls" class="view">
-    <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('interact1')"></div>
-    <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('interact2')"></div>
-    <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('interact3')"></div>
-    <div class="button" id="bottom-right-button" ontouchstart="window.app.sendMessageToScreen('interact4')"></div>
+    <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('wrench')"></div>
+    <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('hammer')"></div>
+    <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('pliers')"></div>
+    <div class="button" id="bottom-right-button" ontouchstart="window.app.sendMessageToScreen('tape')"></div>
   </div>
 
 
@@ -1653,19 +1655,19 @@ AirConsoleViewManager.prototype = {
             //set background color and tool image for each button
             if(i == 0){
               document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("top-left-button").style.backgroundImage = url(tool);
+              //document.getElementById("top-left-button").style.backgroundImage = url('wrench.png');
             }
             if(i == 1){
               document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("top-right-button").style.backgroundImage = url(tool);
+              //document.getElementById("top-right-button").style.backgroundImage = url('hammer.png');
             }
             if(i == 2){
               document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
+              //document.getElementById("bottom-left-button").style.backgroundImage = url('pliars.png');
             }
             if(i == 3){
               document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
+              //document.getElementById("bottom-right-button").style.backgroundImage = url('tape.png');
             }
           }
         }
