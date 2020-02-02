@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
     public Text clock;
     public TextMeshProUGUI clock2;
 
+    private static List<Tool> playerEnteredTools = new List<Tool>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -111,5 +113,8 @@ public class GameManager : MonoBehaviour
             //pass round
         //else
             //fail round
+
+        //clean up list
+        playerEnteredTools.Clear();
     }
 }
