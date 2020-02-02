@@ -92,7 +92,7 @@
     AirConsole.prototype.onMessage = function(device_id, data) {
       //if message is from the game, parse the message
       if(device_id == AirConsole.SCREEN){
-        console.log(data);
+        //console.log(data);
         
         originalString = data;
         
@@ -117,23 +117,21 @@
               break;
           }
           //set background color and tool image for each button
-          switch(i){
-            case 0:
-              document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("top-left-button").style.backgroundImage = url(tool);
-              break;
-            case 1:
-              document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("top-right-button").style.backgroundImage = url(tool);
-              break;
-            case 2:
-              document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
-              break;
-            case 3:
-              document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
-              document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
-              break;
+          if(i == 0){
+            document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("top-left-button").style.backgroundImage = url(tool);
+          }
+          if(i == 1){
+            document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("top-right-button").style.backgroundImage = url(tool);
+          }
+          if(i == 2){
+            document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
+          }
+          if(i == 3){
+            document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
           }
         }
 
