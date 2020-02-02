@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < toolsToGiveOut.Count; i++)
         {
             int p = i % players;
-            eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "," + toolsToGiveOut[i].toolName + ".";
+            eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "." + toolsToGiveOut[i].toolName + ",";
         }
 
         //Debug.Log("start");

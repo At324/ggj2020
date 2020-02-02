@@ -74,15 +74,15 @@ public class RobotGenerator : MonoBehaviour
 
         if (head_rend != null)
         {
-            head_rend.sprite = head_sprites[Random.Range(0, chosen_head_index)];
+            head_rend.sprite = head_sprites[chosen_head_index];
         }
         if (body_rend != null)
         {
-            body_rend.sprite = body_sprites[Random.Range(0, chosen_body_index)];
+            body_rend.sprite = body_sprites[chosen_body_index];
         }
         if (pant_rend != null)
         {
-            pant_rend.sprite = pant_sprites[Random.Range(0, chosen_pant_index)];
+            pant_rend.sprite = pant_sprites[chosen_pant_index];
         }
     }
 

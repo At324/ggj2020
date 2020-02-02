@@ -98,6 +98,7 @@
         
         //parse data to get the tool and color for each button
         splitString = originalString.split(",");
+          console.log()
         for(i = 0; i < splitString.length; i++)
         {
           toolAndColor = splitString[i].split(".");
@@ -109,29 +110,30 @@
             case "hammer":
               tool = "hammer.png";
               break;
-            case "pliars":
-              tool = "pliars.png";
+            case "pliers":
+              tool = "pliers.png";
               break;
             case "tape":
               tool ="tape.png";
               break;
           }
+          console.log(tool);
           //set background color and tool image for each button
           if(i == 0){
             document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("top-left-button").style.backgroundImage = url(tool);
+            document.getElementById("top-left-button").style.backgroundImage = tool;//url(tool);
           }
           if(i == 1){
             document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("top-right-button").style.backgroundImage = url(tool);
+            document.getElementById("top-right-button").style.backgroundImage = tool;//url(tool);
           }
           if(i == 2){
             document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
+            document.getElementById("bottom-left-button").style.backgroundImage = tool;//url(tool);
           }
           if(i == 3){
             document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
+            document.getElementById("bottom-right-button").style.backgroundImage = tool;//url(tool);
           }
         }
 
