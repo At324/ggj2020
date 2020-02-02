@@ -102,20 +102,15 @@
         {
           toolAndColor = splitString[i].split(".");
           //set url for tool image
-          switch(toolAndColor[1]){
-            case "wrench":
+          if(toolAndColor[1] == "wrench")
               tool = "wrench.png";
-              break;
-            case "hammer":
+          if(toolAndColor[1] == "hammer")
               tool = "hammer.png";
-              break;
-            case "pliars":
+          if(toolAndColor[1] == "pliars")
               tool = "pliars.png";
-              break;
-            case "tape":
+          if(toolAndColor[1] == "tape")
               tool ="tape.png";
-              break;
-          }
+              
           //set background color and tool image for each button
           if(i == 0){
             document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
