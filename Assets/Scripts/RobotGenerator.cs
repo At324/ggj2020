@@ -51,10 +51,13 @@ public class RobotGenerator : MonoBehaviour
     private int chosen_body_index;
     private int chosen_pant_index;
 
+    [SerializeField]
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -69,6 +72,8 @@ public class RobotGenerator : MonoBehaviour
         chosen_body_index = Random.Range(0, num_robots);
         chosen_pant_index = Random.Range(0, num_robots);
         damage_state = 0;
+        if (animator != null)
+            animator.SetTrigger("begin");
 
         Debug.LogFormat("head {0} body {1} pant {2}", chosen_head_index, chosen_body_index, chosen_pant_index);
 

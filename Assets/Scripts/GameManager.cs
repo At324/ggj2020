@@ -49,7 +49,8 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("Timer")]
-    public float count = 300.0f;
+    public float count = 20.0f;
+    private float startingCount = 0f;
     public Text clock;
     public TextMeshProUGUI clock2;
 
@@ -68,10 +69,14 @@ public class GameManager : MonoBehaviour
     }
     private static Dictionary<int, List<Tool>> playerTools = new Dictionary<int, List<Tool>>();
 
+    [SerializeField]
+    private Animator robotAnimator;
+    private bool roundActive = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        startingCount = count;
     }
 
     // Update is called once per frame
@@ -92,10 +97,19 @@ public class GameManager : MonoBehaviour
         if (clock2 != null)
             clock2.text = "" + Mathf.Round(count);
 
-        if (count < 0)
+        if (count < 0 && roundActive)
         {
             EndRound();
         }
+    }
+
+    public void StartRound()
+    {
+        startingCount = count;
+        roundActive = true;
+        ToolManager.Instance.InstatiateRandomToolString(AirConsole.instance.GetControllerDeviceIds().Count);
+        GivePlayersTools();
+        RobotGenerator.Instance.RandomizeRobot();
     }
 
     /**
@@ -109,6 +123,10 @@ public class GameManager : MonoBehaviour
         RobotGenerator.Instance.RandomizeRobot();
 
         Debug.LogFormat("Round passed!\nRound number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
+        if (robotAnimator != null)
+        {
+            robotAnimator.SetTrigger("next");
+        }
     }
 
     /**
@@ -130,7 +148,7 @@ public class GameManager : MonoBehaviour
     public void EndRound()
     {
         //if pattern correct
-        if (ContainsSubsequence<Tool>(playerEnteredTools, chosenToolPattern))
+        if (ContainsSubsequence(playerEnteredTools, chosenToolPattern))
         {
             //pass round
             PassRound();
@@ -146,6 +164,7 @@ public class GameManager : MonoBehaviour
         chosenToolPattern.Clear();
         playerTools.Clear();
         ToolManager.Instance.GenerateToolPool(AirConsole.instance.GetControllerDeviceIds().Count);
+        roundActive = false;
     }
 
     public void GivePlayersTools()
@@ -164,7 +183,7 @@ public class GameManager : MonoBehaviour
         string[] eachPlayersTools = new string[players];
         Debug.Log("num players: " + players.ToString());
 
-        List<Tool> toolsToGiveOut = new List<Tool>();
+        List<Tool> toolsToGiveOut = ToolManager.Instance.GenerateToolPool(players);
         for (int i = 0; i < players; i++)
         {
             for (int j = 0; j < ToolManager.Instance.ToolNames.Length; j++)
@@ -178,7 +197,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Shuffle<Tool>(toolsToGiveOut);
+        Shuffle(toolsToGiveOut);
         for (int i = 0; i < toolsToGiveOut.Count; i++)
         {
             int p = i % players;
