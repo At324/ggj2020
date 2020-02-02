@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
 
         RobotGenerator.Instance.RandomizeRobot();
 
-        Debug.LogFormat("Round number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
+        Debug.LogFormat("Round passed!\nRound number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
     }
 
     /**
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
      */
     public void FailRound()
     {
-        
+        Debug.Log("Round failed!");
     }
 
     public bool ContainsSubsequence<T>(List<T> sequence, List<T> subsequence)
@@ -133,10 +133,12 @@ public class GameManager : MonoBehaviour
         if (ContainsSubsequence<Tool>(playerEnteredTools, chosenToolPattern))
         {
             //pass round
+            PassRound();
         }
         else
         {
             //fail round
+            FailRound();
         }
 
         //clean up list
@@ -152,13 +154,12 @@ public class GameManager : MonoBehaviour
         //AirConsole.instance.GetActivePlayerDeviceIds.CopyTo(player_ids, 0);
         List<int> player_ids = AirConsole.instance.GetControllerDeviceIds();
         int players = player_ids.Count;
+        playerTools.Clear();
         //Debug.Log("players connected: " + player_ids.Count);
-        /*foreach (int i in barg)
+        foreach (int i in player_ids)
         {
-            Debug.Log(i);
-            if (i != 0)
-                players++;
-        }*/
+            playerTools.Add(i, new List<Tool>());
+        }
         //List<string> eachPlayersTools = new List<string>();
         string[] eachPlayersTools = new string[players];
         Debug.Log("num players: " + players.ToString());
@@ -183,15 +184,15 @@ public class GameManager : MonoBehaviour
             int p = i % players;
             eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "." + toolsToGiveOut[i].toolName + ",";
             //playerTools.Add(player_ids[p], toolsToGiveOut[i]);
-            if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
-            {
+            //if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
+            //{
                 playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
-            }
-            else
+            //}
+            /*else
             {
                 playerTools[player_ids[p]] = new List<Tool>();
                 playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
-            }
+            }*/
         }
 
         //Debug.Log("start");
@@ -217,5 +218,10 @@ public class GameManager : MonoBehaviour
             ts[i] = ts[r];
             ts[r] = tmp;
         }
+    }
+
+    public void AddToolPressed(int playerNum, int toolIndex)
+    {
+        playerEnteredTools.Add(playerTools[playerNum][toolIndex]);
     }
 }
