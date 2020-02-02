@@ -153,6 +153,10 @@ public class ToolManager : MonoBehaviour
     public void InstatiateRandomToolString(int players)
     {
         toolString.Clear();
+        foreach (Transform child in patternDisplay.transform)
+        {
+            Destroy(child.gameObject);
+        }
 
         int num_tools = (int)(GameManager.Instance.DifficultyModifier + Random.Range(-0.5f, 0.5f));
         if (num_tools < 5)
