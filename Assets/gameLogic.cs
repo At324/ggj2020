@@ -11,6 +11,7 @@ public class gameLogic : MonoBehaviour
     void Start() {
         AirConsole.instance.onMessage += OnMessage;
         AirConsole.instance.SetActivePlayers(8);
+        AirConsole.instance.Broadcast("menu");
     }
 
     //handles input for the game
@@ -19,14 +20,20 @@ public class gameLogic : MonoBehaviour
 
         if(data["action"] != null && data["action"].ToString().Equals("back")){
             //load menu and menu controlls
+            AirConsole.instance.SetActivePlayers(8);
+            AirConsole.instance.Broadcast("menu");
             Debug.Log("back");
         }
         if(data["action"] != null && data["action"].ToString().Equals("play")){
             //load game controlls and set active players one last time and start game
+            AirConsole.instance.SetActivePlayers(8);
+            AirConsole.instance.Broadcast("game");
             Debug.Log("play game");
         }
         if(data["action"] != null && data["action"].ToString().Equals("credits")){
             //load credits and credit controlls
+            AirConsole.instance.SetActivePlayers(8);
+            AirConsole.instance.Broadcast("credits");
             Debug.Log("credits");
         }
         //pass player number and button pressed to other funtion

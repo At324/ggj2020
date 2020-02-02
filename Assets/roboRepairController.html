@@ -3,6 +3,7 @@
 <head>
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <script type="text/javascript" src="https://www.airconsole.com/api/airconsole-1.7.0.js"></script>
+  <script type="text/javascript" src="airconsole-view-manager.js"></script>
   <style type=text/css>
   /* the style sheet dictates what our elements (buttons, backgrounds etc.) will look like. */
 
@@ -13,13 +14,15 @@
     border: solid #1f1f1f 2px;
     height: 100%;
     position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
 
   #back-button{
     background-image: url('back.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+    
   	left: 25%;
     top: 25%;
   	width: 50%;
@@ -28,8 +31,7 @@
 
   #top-button{
     background-image: url('play.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+    
   	left: 0;
     top: 0;
   	width: 100%;
@@ -39,8 +41,7 @@
 
   #bottom-button{
     background-image: url('credits.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+    
 	  left: 0;
   	bottom: 0;
   	width: 100%;
@@ -52,8 +53,6 @@
     top: 0;
   	width: 50%;
   	height: 50%;
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
   #top-right-button{
@@ -61,8 +60,6 @@
     top: 0;
   	width: 50%;
   	height: 50%;
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
   #bottom-left-button{
@@ -70,8 +67,6 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
   #bottom-right-button{
@@ -79,8 +74,6 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
   </style>
@@ -88,13 +81,14 @@
   <script type="text/javascript">
 
     var airconsole;
+    var vm = null;
 
     function App() {
 
     /* JavaScript / Functionality. Add functions and evens here */ 
 
       this.airconsole = new AirConsole({"orientation": "portrait"});
-      
+      //this.vm = new AirConsoleViewManager(airconsole);
       /*
        * Here we are adding support for mouse events manually.
        * --> WE STRONGLY ENCOURAGE YOU TO USE THE AIRCONSOLE CONTROLS LIBRARY
@@ -121,47 +115,61 @@
     }
 
 
+    AirConsole.prototype.onReady = function() {
+        // Init the ViewManager
+        //vm = new AirConsoleViewManager(airconsole);
+    };
+
     AirConsole.prototype.onMessage = function(device_id, data) {
       //if message is from the game, parse the message
       if(device_id == AirConsole.SCREEN){
-        //console.log(data);
+        console.log(data);
         
-        originalString = data;
-        
-        //parse data to get the tool and color for each button
-        splitString = originalString.split(",");
-        for(i = 0; i < splitString.length; i++)
-        {
-          toolAndColor = splitString[i].split(".");
-          //set url for tool image
-          if(toolAndColor[1] == "wrench")
-              tool = 'wrench.png';
-          if(toolAndColor[1] == "hammer")
-              tool = 'hammer.png';
-          if(toolAndColor[1] == "pliars")
-              tool = 'pliars.png';
-          if(toolAndColor[1] == "tape")
-              tool ='tape.png';
+        if(data == "credits"){
+          //AirConsoleViewManager.prototype.controllersShow('credits-controlls');
+        }
+        else if(data == "game"){
+          //AirConsoleViewManager.prototype.controllersShow('game-controlls');
+        }
+        else if(data == "menu"){
+          //AirConsoleViewManager.prototype.controllersShow('menu-controlls');
+        }
+        else{
+          //parse data to get the tool and color for each button
+          originalString = data;
+          splitString = originalString.split(",");
+          for(i = 0; i < splitString.length; i++)
+          {
+            toolAndColor = splitString[i].split(".");
+            //set url for tool image
+            if(toolAndColor[1] == "wrench")
+                tool = 'wrench.png';
+            if(toolAndColor[1] == "hammer")
+                tool = 'hammer.png';
+            if(toolAndColor[1] == "pliars")
+                tool = 'pliars.png';
+            if(toolAndColor[1] == "tape")
+                tool ='tape.png';
 
-          //set background color and tool image for each button
-          if(i == 0){
-            document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("top-left-button").style.backgroundImage = url(tool);
-          }
-          if(i == 1){
-            document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("top-right-button").style.backgroundImage = url(tool);
-          }
-          if(i == 2){
-            document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
-          }
-          if(i == 3){
-            document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
-            document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
+            //set background color and tool image for each button
+            if(i == 0){
+              document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("top-left-button").style.backgroundImage = url(tool);
+            }
+            if(i == 1){
+              document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("top-right-button").style.backgroundImage = url(tool);
+            }
+            if(i == 2){
+              document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
+            }
+            if(i == 3){
+              document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
+            }
           }
         }
-
       }
     };
 
@@ -180,7 +188,7 @@
   <!-- Add your HTML elements here -->
 
   <!--game controlls-->
-  <div id="game-controlls">
+  <div id="game-controlls" class="view">
     <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('interact1')"></div>
     <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('interact2')"></div>
     <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('interact3')"></div>
@@ -188,16 +196,16 @@
   </div>
 
 
-  <!--menu controlls-->
-  <div id="menu-controlls">
+  <!--menu controlls
+  <div id="menu-controlls" class="view default-view">
     <div class="button" id="top-button" ontouchstart="window.app.sendMessageToScreen('play')"></div>
     <div class="button" id="bottom-button" ontouchstart="window.app.sendMessageToScreen('credits')"></div>
-  </div>
+  </div>-->
 
-  <!--credits controlls-->
-  <div id="credits-controlls">
+  <!--credits controlls
+  <div id="credits-controlls" class="view">
     <div class="button" id="back-button" ontouchstart="window.app.sendMessageToScreen('back')"></div>
-  </div>
+  </div>-->
 
 </body>
 </html>
