@@ -21,9 +21,20 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Manager Stuff")]
     [SerializeField]
-    private float difficulty_modifier = 1.0f;
+    private static float difficulty_modifier = 5.0f;
+    public float DifficultyModifier
+    {
+        get
+        {
+            return difficulty_modifier;
+        }
+        set
+        {
+            difficulty_modifier = value;
+        }
+    }
     private static int round_num = 0;
-    public static int RoundNum
+    public int RoundNum
     {
         get
         {
