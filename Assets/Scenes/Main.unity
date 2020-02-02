@@ -1126,9 +1126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e633bb07422ac8d468f5317ded3fa472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 20
+  count: 5
   clock: {fileID: 0}
   clock2: {fileID: 1711806341}
+  robotAnimator: {fileID: 1577707246}
 --- !u!4 &544986445
 Transform:
   m_ObjectHideFlags: 0
@@ -2571,7 +2572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   browserStartMode: 0
-  controllerHtml: {fileID: 4900000, guid: 2fdb1da0086666541ad7eecc5b2e4a61, type: 3}
+  controllerHtml: {fileID: 4900000, guid: c3db0c19604e32e4d99e724ad349301f, type: 3}
   autoScaleCanvas: 1
 --- !u!4 &1411468275
 Transform:
@@ -2942,6 +2943,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1577707245}
   - component: {fileID: 1577707244}
+  - component: {fileID: 1577707246}
   m_Layer: 0
   m_Name: RobotMan
   m_TagString: Untagged
@@ -2992,6 +2994,7 @@ MonoBehaviour:
   head_rend: {fileID: 1651513915}
   body_rend: {fileID: 175066182}
   pant_rend: {fileID: 285246511}
+  animator: {fileID: 0}
 --- !u!4 &1577707245
 Transform:
   m_ObjectHideFlags: 0
@@ -3010,6 +3013,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1577707246
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577707243}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 347a67daa3ae2574885ee654b8ad021e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1643895457
 GameObject:
   m_ObjectHideFlags: 0

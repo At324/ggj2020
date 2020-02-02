@@ -90,7 +90,8 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        count -= Time.deltaTime;
+        if (roundActive)
+            count -= Time.deltaTime;
         if (count < 0.0f)
             count = 0.0f;
 
@@ -100,7 +101,7 @@ public class GameManager : MonoBehaviour
         if (clock2 != null)
             clock2.text = "" + Mathf.Round(count);
 
-        if (count < 0 && roundActive)
+        if (count <= 0 && roundActive)
         {
             EndRound();
         }
@@ -112,7 +113,7 @@ public class GameManager : MonoBehaviour
         roundActive = true;
         ToolManager.Instance.InstatiateRandomToolString(AirConsole.instance.GetControllerDeviceIds().Count);
         GivePlayersTools();
-        RobotGenerator.Instance.RandomizeRobot();
+        //RobotGenerator.Instance.RandomizeRobot();
     }
 
     /**
@@ -123,13 +124,13 @@ public class GameManager : MonoBehaviour
         round_num++;
         difficulty_modifier += Random.Range(0.25f, 1.0f);
 
-        RobotGenerator.Instance.RandomizeRobot();
+        //RobotGenerator.Instance.RandomizeRobot();
 
         Debug.LogFormat("Round passed!\nRound number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
-        if (robotAnimator != null)
+        /*if (robotAnimator != null)
         {
             robotAnimator.SetTrigger("next");
-        }
+        }*/
     }
 
     /**
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour
      */
     public void FailRound()
     {
-        Debug.Log("Round failed!");
+        Debug.Log("Round failed! You made it to round " + round_num.ToString());
     }
 
     public bool ContainsSubsequence<T>(List<T> sequence, List<T> subsequence)
@@ -168,6 +169,10 @@ public class GameManager : MonoBehaviour
         playerTools.Clear();
         ToolManager.Instance.GenerateToolPool(AirConsole.instance.GetControllerDeviceIds().Count);
         roundActive = false;
+        if (robotAnimator != null)
+        {
+            robotAnimator.SetTrigger("next");
+        }
     }
 
     public void GivePlayersTools()

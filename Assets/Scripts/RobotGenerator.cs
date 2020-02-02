@@ -66,6 +66,11 @@ public class RobotGenerator : MonoBehaviour
         
     }
 
+    public void CallStartRound()
+    {
+        GameManager.Instance.StartRound();
+    }
+
     public void RandomizeRobot()
     {
         chosen_head_index = Random.Range(0, num_robots);
