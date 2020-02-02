@@ -13,6 +13,7 @@ public class gameLogic : MonoBehaviour
         AirConsole.instance.SetActivePlayers(8);
     }
 
+    //handles input for the game
     void OnMessage(int fromDeviceID, JToken data) {
         //Debug.Log("message from" + fromDeviceID + ", data: " + data);
 
