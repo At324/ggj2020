@@ -162,8 +162,8 @@ public class GameManager : MonoBehaviour
         foreach (string s in eachPlayersTools)
         {
             //Debug.Log(s);
-            Debug.Log("Sending msg [" + s.Remove(s.Length - 1) + "] to player [" + player_ids[curr_player].ToString() + "]");
-            AirConsole.instance.Message(player_ids[curr_player], s.Remove(s.Length - 1));
+            Debug.Log("Sending msg [" + s.Remove(s.Length - 1).ToLower() + "] to player [" + player_ids[curr_player].ToString() + "]");
+            AirConsole.instance.Message(player_ids[curr_player], s.Remove(s.Length - 1).ToLower());
             curr_player++;
         }
         //Debug.Log("end");
