@@ -13,6 +13,19 @@ public struct Tool
 
 public class ToolManager : MonoBehaviour
 {
+    private static ToolManager instance;
+    public static ToolManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<ToolManager>();
+            }
+            return instance;
+        }
+    }
+
     public float toolScale = 1f, toolSpacing = 0.5f;
 
     public Transform toolArea; //Starting area on screen toolString appears
@@ -43,6 +56,32 @@ public class ToolManager : MonoBehaviour
         Color.cyan,
         new Color(153f / 255f, 51f / 255f, 1.0f)
     };
+    public Color[] Colors
+    {
+        get
+        {
+            return colors;
+        }
+    }
+
+    private string[] colorNames =
+    {
+        "Red",
+        "Green",
+        "Blue",
+        "Yellow",
+        "Magenta",
+        "Orange",
+        "Cyan",
+        "Purple"
+    };
+    public string[] ColorNames
+    {
+        get
+        {
+            return colorNames;
+        }
+    }
 
     private string[] toolNames =
     {
@@ -51,6 +90,13 @@ public class ToolManager : MonoBehaviour
         "Pliers",
         "Tape"
     };
+    public string[] ToolNames
+    {
+        get
+        {
+            return toolNames;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using NDream.AirConsole;
 
 public class GameManager : MonoBehaviour
 {
@@ -101,7 +102,7 @@ public class GameManager : MonoBehaviour
      */
     public void FailRound()
     {
-
+        
     }
 
     /**
@@ -116,5 +117,68 @@ public class GameManager : MonoBehaviour
 
         //clean up list
         playerEnteredTools.Clear();
+    }
+
+    public void GivePlayersTools()
+    {
+        //int[] player_ids = new int[8];
+        //AirConsole.instance.GetActivePlayerDeviceIds.CopyTo(player_ids, 0);
+        List<int> player_ids = AirConsole.instance.GetControllerDeviceIds();
+        int players = player_ids.Count;
+        //Debug.Log("players connected: " + player_ids.Count);
+        /*foreach (int i in barg)
+        {
+            Debug.Log(i);
+            if (i != 0)
+                players++;
+        }*/
+        //List<string> eachPlayersTools = new List<string>();
+        string[] eachPlayersTools = new string[players];
+        Debug.Log("num players: " + players.ToString());
+
+        List<Tool> toolsToGiveOut = new List<Tool>();
+        for (int i = 0; i < players; i++)
+        {
+            for (int j = 0; j < ToolManager.Instance.ToolNames.Length; j++)
+            {
+                Tool t;
+                t.toolIndex = j;
+                t.toolName = ToolManager.Instance.ToolNames[j];
+                t.colorIndex = i;
+                t.toolColor = ToolManager.Instance.Colors[i];
+                toolsToGiveOut.Add(t);
+            }
+        }
+
+        Shuffle<Tool>(toolsToGiveOut);
+        for (int i = 0; i < toolsToGiveOut.Count; i++)
+        {
+            int p = i % players;
+            eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "," + toolsToGiveOut[i].toolName + ".";
+        }
+
+        //Debug.Log("start");
+        int curr_player = 0;
+        foreach (string s in eachPlayersTools)
+        {
+            //Debug.Log(s);
+            Debug.Log("Sending msg [" + s.Remove(s.Length - 1) + "] to player [" + player_ids[curr_player].ToString() + "]");
+            AirConsole.instance.Message(player_ids[curr_player], s.Remove(s.Length - 1));
+            curr_player++;
+        }
+        //Debug.Log("end");
+    }
+
+    public void Shuffle<T>(IList<T> ts)
+    {
+        var count = ts.Count;
+        var last = count - 1;
+        for (var i = 0; i < last; ++i)
+        {
+            var r = UnityEngine.Random.Range(i, count);
+            var tmp = ts[i];
+            ts[i] = ts[r];
+            ts[r] = tmp;
+        }
     }
 }
