@@ -13,6 +13,19 @@ public struct Tool
 
 public class ToolManager : MonoBehaviour
 {
+    private static ToolManager instance;
+    public static ToolManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<ToolManager>();
+            }
+            return instance;
+        }
+    }
+
     public float toolScale = 1f, toolSpacing = 0.5f;
 
     public Transform toolArea; //Starting area on screen toolString appears
@@ -39,10 +52,36 @@ public class ToolManager : MonoBehaviour
         Color.blue,
         Color.yellow,
         Color.magenta,
-        new Color(255f, 102f, 0f),
+        new Color(1.0f, 102f / 255f, 0f),
         Color.cyan,
-        new Color(153f, 51f, 255f)
+        new Color(153f / 255f, 51f / 255f, 1.0f)
     };
+    public Color[] Colors
+    {
+        get
+        {
+            return colors;
+        }
+    }
+
+    private string[] colorNames =
+    {
+        "Red",
+        "Green",
+        "Blue",
+        "Yellow",
+        "Magenta",
+        "Orange",
+        "Cyan",
+        "Purple"
+    };
+    public string[] ColorNames
+    {
+        get
+        {
+            return colorNames;
+        }
+    }
 
     private string[] toolNames =
     {
@@ -51,6 +90,13 @@ public class ToolManager : MonoBehaviour
         "Pliers",
         "Tape"
     };
+    public string[] ToolNames
+    {
+        get
+        {
+            return toolNames;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -148,6 +194,30 @@ public class ToolManager : MonoBehaviour
         new_tool.toolColor = colors[new_tool.colorIndex];
         return new_tool;
     }
+
+    private IEnumerator DisplayPattern()
+    {
+        string randomtools = "";
+        foreach (Tool t in toolString)
+        {
+            GameManager.Instance.ChosenToolPattern.Add(t);
+            randomtools += t.toolColor.ToString() + " " + t.toolName + "\n";
+            GameObject new_prefab = Instantiate(iconPrefab);
+            PatternPiece pp = new_prefab.GetComponent<PatternPiece>();
+            pp.MyTool = t;
+            pp.ChangeUIImage(toolImages[t.toolIndex]);
+            pp.transform.parent = patternDisplay.transform;
+            new_prefab.GetComponent<UnityEngine.UI.Image>().color = t.toolColor;
+            yield return new WaitForSeconds(0.5f);
+        }
+        Debug.Log(randomtools);
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (Transform child in patternDisplay.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     
     //Make Line of Tools to be Inputted
     public void InstatiateRandomToolString(int players)
@@ -168,17 +238,6 @@ public class ToolManager : MonoBehaviour
             toolString.Add(curr_tool);
         }
 
-        string randomtools = "";
-        foreach (Tool t in toolString)
-        {
-            randomtools += t.toolColor.ToString() + " " + t.toolName + "\n";
-            GameObject new_prefab = Instantiate(iconPrefab);
-            PatternPiece pp = new_prefab.GetComponent<PatternPiece>();
-            pp.MyTool = t;
-            pp.ChangeUIImage(toolImages[t.toolIndex]);
-            pp.transform.parent = patternDisplay.transform;
-            new_prefab.GetComponent<UnityEngine.UI.Image>().color = t.toolColor;
-        }
-        Debug.Log(randomtools);
+        StartCoroutine(DisplayPattern());
     }
 }

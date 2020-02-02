@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using NDream.AirConsole;
-using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -49,41 +49,34 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("Timer")]
-    public float count = 300.0f;
+    public float count = 20.0f;
+    private float startingCount = 0f;
     public Text clock;
     public TextMeshProUGUI clock2;
+
+    private static List<Tool> playerEnteredTools = new List<Tool>();
+    private static List<Tool> chosenToolPattern = new List<Tool>();
+    public List<Tool> ChosenToolPattern
+    {
+        get
+        {
+            return chosenToolPattern;
+        }
+        set
+        {
+            chosenToolPattern = value;
+        }
+    }
+    private static Dictionary<int, List<Tool>> playerTools = new Dictionary<int, List<Tool>>();
+
+    [SerializeField]
+    private Animator robotAnimator;
+    private bool roundActive = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        AirConsole.instance.onMessage += OnMessage;
-        AirConsole.instance.SetActivePlayers(8);
-    }
-
-    void OnMessage(int fromDeviceID, JToken data)
-    {
-        //Debug.Log("message from" + fromDeviceID + ", data: " + data);
-
-        //pass player number and button pressed to other funtion
-        if (data["action"] != null)
-        {
-            sendInput(AirConsole.instance.ConvertDeviceIdToPlayerNumber(fromDeviceID), data["action"].ToString());
-        }
-    }
-
-    void sendInput(int player, string button)
-    {
-        //do something based on player number and button they pressed
-        Debug.Log("player " + player + " pressed button " + button);
-    }
-
-    void OnDestroy()
-    {
-        //unregister events
-        if (AirConsole.instance != null)
-        {
-            AirConsole.instance.onMessage -= OnMessage;
-        }
+        startingCount = count;
     }
 
     void Update()
@@ -97,7 +90,8 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        count -= Time.deltaTime;
+        if (roundActive)
+            count -= Time.deltaTime;
         if (count < 0.0f)
             count = 0.0f;
 
@@ -107,10 +101,19 @@ public class GameManager : MonoBehaviour
         if (clock2 != null)
             clock2.text = "" + Mathf.Round(count);
 
-        if (count < 0)
+        if (count <= 0 && roundActive)
         {
             EndRound();
         }
+    }
+
+    public void StartRound()
+    {
+        startingCount = count;
+        roundActive = true;
+        ToolManager.Instance.InstatiateRandomToolString(AirConsole.instance.GetControllerDeviceIds().Count);
+        GivePlayersTools();
+        //RobotGenerator.Instance.RandomizeRobot();
     }
 
     /**
@@ -121,9 +124,13 @@ public class GameManager : MonoBehaviour
         round_num++;
         difficulty_modifier += Random.Range(0.25f, 1.0f);
 
-        RobotGenerator.Instance.RandomizeRobot();
+        //RobotGenerator.Instance.RandomizeRobot();
 
-        Debug.LogFormat("Round number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
+        Debug.LogFormat("Round passed!\nRound number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
+        /*if (robotAnimator != null)
+        {
+            robotAnimator.SetTrigger("next");
+        }*/
     }
 
     /**
@@ -131,7 +138,12 @@ public class GameManager : MonoBehaviour
      */
     public void FailRound()
     {
+        Debug.Log("Round failed! You made it to round " + round_num.ToString());
+    }
 
+    public bool ContainsSubsequence<T>(List<T> sequence, List<T> subsequence)
+    {
+        return Enumerable.Range(0, sequence.Count - subsequence.Count + 1).Any(n => sequence.Skip(n).Take(subsequence.Count).SequenceEqual(subsequence));
     }
 
     /**
@@ -140,8 +152,103 @@ public class GameManager : MonoBehaviour
     public void EndRound()
     {
         //if pattern correct
+        if (ContainsSubsequence(playerEnteredTools, chosenToolPattern))
+        {
             //pass round
-        //else
+            PassRound();
+        }
+        else
+        {
             //fail round
+            FailRound();
+        }
+
+        //clean up list
+        playerEnteredTools.Clear();
+        chosenToolPattern.Clear();
+        playerTools.Clear();
+        ToolManager.Instance.GenerateToolPool(AirConsole.instance.GetControllerDeviceIds().Count);
+        roundActive = false;
+        if (robotAnimator != null)
+        {
+            robotAnimator.SetTrigger("next");
+        }
+    }
+
+    public void GivePlayersTools()
+    {
+        //int[] player_ids = new int[8];
+        //AirConsole.instance.GetActivePlayerDeviceIds.CopyTo(player_ids, 0);
+        List<int> player_ids = AirConsole.instance.GetControllerDeviceIds();
+        int players = player_ids.Count;
+        playerTools.Clear();
+        //Debug.Log("players connected: " + player_ids.Count);
+        foreach (int i in player_ids)
+        {
+            playerTools.Add(i, new List<Tool>());
+        }
+        //List<string> eachPlayersTools = new List<string>();
+        string[] eachPlayersTools = new string[players];
+        Debug.Log("num players: " + players.ToString());
+
+        List<Tool> toolsToGiveOut = ToolManager.Instance.GenerateToolPool(players);
+        for (int i = 0; i < players; i++)
+        {
+            for (int j = 0; j < ToolManager.Instance.ToolNames.Length; j++)
+            {
+                Tool t;
+                t.toolIndex = j;
+                t.toolName = ToolManager.Instance.ToolNames[j];
+                t.colorIndex = i;
+                t.toolColor = ToolManager.Instance.Colors[i];
+                toolsToGiveOut.Add(t);
+            }
+        }
+
+        Shuffle(toolsToGiveOut);
+        for (int i = 0; i < toolsToGiveOut.Count; i++)
+        {
+            int p = i % players;
+            eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "." + toolsToGiveOut[i].toolName + ",";
+            //playerTools.Add(player_ids[p], toolsToGiveOut[i]);
+            //if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
+            //{
+                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            //}
+            /*else
+            {
+                playerTools[player_ids[p]] = new List<Tool>();
+                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            }*/
+        }
+
+        //Debug.Log("start");
+        int curr_player = 0;
+        foreach (string s in eachPlayersTools)
+        {
+            //Debug.Log(s);
+            Debug.Log("Sending msg [" + s.Remove(s.Length - 1).ToLower() + "] to player [" + player_ids[curr_player].ToString() + "]");
+            AirConsole.instance.Message(player_ids[curr_player], s.Remove(s.Length - 1).ToLower());
+            curr_player++;
+        }
+        //Debug.Log("end");
+    }
+
+    public void Shuffle<T>(IList<T> ts)
+    {
+        var count = ts.Count;
+        var last = count - 1;
+        for (var i = 0; i < last; ++i)
+        {
+            var r = UnityEngine.Random.Range(i, count);
+            var tmp = ts[i];
+            ts[i] = ts[r];
+            ts[r] = tmp;
+        }
+    }
+
+    public void AddToolPressed(int playerNum, int toolIndex)
+    {
+        playerEnteredTools.Add(playerTools[playerNum][toolIndex]);
     }
 }

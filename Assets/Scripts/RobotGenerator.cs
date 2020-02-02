@@ -51,10 +51,13 @@ public class RobotGenerator : MonoBehaviour
     private int chosen_body_index;
     private int chosen_pant_index;
 
+    [SerializeField]
+    private Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -63,26 +66,33 @@ public class RobotGenerator : MonoBehaviour
         
     }
 
+    public void CallStartRound()
+    {
+        GameManager.Instance.StartRound();
+    }
+
     public void RandomizeRobot()
     {
         chosen_head_index = Random.Range(0, num_robots);
         chosen_body_index = Random.Range(0, num_robots);
         chosen_pant_index = Random.Range(0, num_robots);
         damage_state = 0;
+        if (animator != null)
+            animator.SetTrigger("begin");
 
         Debug.LogFormat("head {0} body {1} pant {2}", chosen_head_index, chosen_body_index, chosen_pant_index);
 
         if (head_rend != null)
         {
-            head_rend.sprite = head_sprites[Random.Range(0, chosen_head_index)];
+            head_rend.sprite = head_sprites[chosen_head_index];
         }
         if (body_rend != null)
         {
-            body_rend.sprite = body_sprites[Random.Range(0, chosen_body_index)];
+            body_rend.sprite = body_sprites[chosen_body_index];
         }
         if (pant_rend != null)
         {
-            pant_rend.sprite = pant_sprites[Random.Range(0, chosen_pant_index)];
+            pant_rend.sprite = pant_sprites[chosen_pant_index];
         }
     }
 
