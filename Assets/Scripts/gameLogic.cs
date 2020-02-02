@@ -6,37 +6,38 @@ using Newtonsoft.Json.Linq;
 
 public class gameLogic : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start() {
         AirConsole.instance.onMessage += OnMessage;
+        AirConsole.instance.SetActivePlayers(8);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void OnMessage(int fromDeviceID, JToken data) {
-        Debug.Log("message from" + fromDeviceID + ", data: " + data);
-        if(data["action"] != null && data["action"].ToString().Equals("interact1")){
-            Camera.main.backgroundColor = new Color(255,0,0);
-        }
-        if(data["action"] != null && data["action"].ToString().Equals("interact2")){
-            Camera.main.backgroundColor = new Color (0,255,0);
-        }
-        if(data["action"] != null && data["action"].ToString().Equals("interact3")){
-            Camera.main.backgroundColor = new Color (0,0,255);
-        }
-        if(data["action"] != null && data["action"].ToString().Equals("interact4")){
-            Camera.main.backgroundColor = new Color (255,255,0);
+        //Debug.Log("message from" + fromDeviceID + ", data: " + data);
+
+        //pass player number and button pressed to other funtion
+        if(data["action"] != null){
+            sendInput(AirConsole.instance.ConvertDeviceIdToPlayerNumber(fromDeviceID),data["action"].ToString());
         }
     }
 
+    void sendInput(int player, string button){
+        //do something based on player number and button they pressed
+        Debug.Log("player " + player + " pressed button " + button);
+    }
 
     void OnDestroy (){
         //unregister events
         if(AirConsole.instance != null){
             AirConsole.instance.onMessage -= OnMessage;
+        }
+    }
+
+    void Update(){
+        if(Input.GetKeyDown(KeyCode.Space)){
+            AirConsole.instance.SetActivePlayers(8);
+            Debug.Log("active players set");
         }
     }
 }
