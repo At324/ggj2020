@@ -79,10 +79,13 @@ public class GameManager : MonoBehaviour
         startingCount = count;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            AirConsole.instance.SetActivePlayers(8);
+            Debug.Log("active players set");
+        }
     }
 
     void FixedUpdate()
