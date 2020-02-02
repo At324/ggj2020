@@ -26,7 +26,6 @@ public class menuLogic : MonoBehaviour
         }
     }
 
-
     void OnDestroy (){
         //unregister events
         if(AirConsole.instance != null){
