@@ -200,6 +200,7 @@ public class ToolManager : MonoBehaviour
         string randomtools = "";
         foreach (Tool t in toolString)
         {
+            GameManager.Instance.ChosenToolPattern.Add(t);
             randomtools += t.toolColor.ToString() + " " + t.toolName + "\n";
             GameObject new_prefab = Instantiate(iconPrefab);
             PatternPiece pp = new_prefab.GetComponent<PatternPiece>();

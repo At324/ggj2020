@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using NDream.AirConsole;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -53,6 +54,19 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI clock2;
 
     private static List<Tool> playerEnteredTools = new List<Tool>();
+    private static List<Tool> chosenToolPattern = new List<Tool>();
+    public List<Tool> ChosenToolPattern
+    {
+        get
+        {
+            return chosenToolPattern;
+        }
+        set
+        {
+            chosenToolPattern = value;
+        }
+    }
+    private static Dictionary<int, List<Tool>> playerTools = new Dictionary<int, List<Tool>>();
 
     // Start is called before the first frame update
     void Start()
@@ -105,18 +119,31 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public bool ContainsSubsequence<T>(List<T> sequence, List<T> subsequence)
+    {
+        return Enumerable.Range(0, sequence.Count - subsequence.Count + 1).Any(n => sequence.Skip(n).Take(subsequence.Count).SequenceEqual(subsequence));
+    }
+
     /**
      * @brief Time's up, let's check to see if the pattern was right or not
      */
     public void EndRound()
     {
         //if pattern correct
+        if (ContainsSubsequence<Tool>(playerEnteredTools, chosenToolPattern))
+        {
             //pass round
-        //else
+        }
+        else
+        {
             //fail round
+        }
 
         //clean up list
         playerEnteredTools.Clear();
+        chosenToolPattern.Clear();
+        playerTools.Clear();
+        ToolManager.Instance.GenerateToolPool(AirConsole.instance.GetControllerDeviceIds().Count);
     }
 
     public void GivePlayersTools()
@@ -155,6 +182,16 @@ public class GameManager : MonoBehaviour
         {
             int p = i % players;
             eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "." + toolsToGiveOut[i].toolName + ",";
+            //playerTools.Add(player_ids[p], toolsToGiveOut[i]);
+            if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
+            {
+                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            }
+            else
+            {
+                playerTools[player_ids[p]] = new List<Tool>();
+                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            }
         }
 
         //Debug.Log("start");
