@@ -57,6 +57,6 @@ sysinfo.txt
 # Builds
 *.apk
 
-
+*.psd
 # Crashlytics generated file
 crashlytics-build.properties
