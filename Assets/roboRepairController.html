@@ -20,6 +20,8 @@
     top: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   #top-right-button{
@@ -27,6 +29,8 @@
     top: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   #bottom-left-button{
@@ -34,6 +38,8 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   #bottom-right-button{
@@ -41,6 +47,8 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   </style>
@@ -80,10 +88,20 @@
       }
     }
 
+
+    AirConsole.prototype.onMessage = function(device_id, data) {
+      //if message is from the game, parse the message
+      if(device_id == AirConsole.SCREEN){
+        Console.log(data);
+
+      }
+    };
+
+
     App.prototype.sendMessageToScreen = function(msg){
       console.log("butotn pressed");
       var message = {
-        'action':msg
+        'action':msg,
       }
       this.airconsole.message(AirConsole.SCREEN, message);
     };
