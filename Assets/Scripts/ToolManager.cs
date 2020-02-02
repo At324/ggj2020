@@ -39,9 +39,9 @@ public class ToolManager : MonoBehaviour
         Color.blue,
         Color.yellow,
         Color.magenta,
-        new Color(255f, 102f, 0f),
+        new Color(1.0f, 102f / 255f, 0f),
         Color.cyan,
-        new Color(153f, 51f, 255f)
+        new Color(153f / 255f, 51f / 255f, 1.0f)
     };
 
     private string[] toolNames =
