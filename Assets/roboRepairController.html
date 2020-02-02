@@ -92,13 +92,13 @@
     AirConsole.prototype.onMessage = function(device_id, data) {
       //if message is from the game, parse the message
       if(device_id == AirConsole.SCREEN){
-        Console.log(data);
+        console.log(data);
         
         originalString = data;
         
         //parse data to get the tool and color for each button
         splitString = originalString.split(",");
-        for(i = 0; i < splitString.length(); i++)
+        for(i = 0; i < splitString.length; i++)
         {
           toolAndColor = splitString[i].split(".");
           //set url for tool image
