@@ -6,10 +6,10 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
+    // Uses TextMeshPro to make a Seconds only based countdown timer 
 
     public float count = 300f;
-    public Text clock;
-    public TextMeshProUGUI clock2;
+    public TextMeshProUGUI clock;
 
     // Use this for initialization
     void Start()
@@ -25,11 +25,12 @@ public class Timer : MonoBehaviour
         //string minutes = ((int)count / 60).ToString();
         //string seconds = (count % 60).ToString("f2");
 
-        clock2.text = "" + Mathf.Round(count);
+        clock.text = "" + Mathf.Round(count);
 
         if (count < 0)
         {
-            //DIE 
+            // DIE 
+            // end round
         }
     }
 }
