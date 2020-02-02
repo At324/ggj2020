@@ -15,11 +15,45 @@
     position: absolute;
   }
 
+
+  #back-button{
+    background-image: url('back.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+  	left: 25%;
+    top: 25%;
+  	width: 50%;
+  	height: 50%;
+  }
+
+  #top-button{
+    background-image: url('play.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+  	left: 0;
+    top: 0;
+  	width: 100%;
+  	height: 50%;
+  }
+
+
+  #bottom-button{
+    background-image: url('credits.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+	  left: 0;
+  	bottom: 0;
+  	width: 100%;
+  	height: 50%;
+  }
+
   #top-left-button{
   	left: 0;
     top: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   #top-right-button{
@@ -27,6 +61,8 @@
     top: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   #bottom-left-button{
@@ -34,6 +70,8 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   #bottom-right-button{
@@ -41,6 +79,8 @@
   	bottom: 0;
   	width: 50%;
   	height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   </style>
@@ -81,19 +121,83 @@
     }
 
 
+    AirConsole.prototype.onMessage = function(device_id, data) {
+      //if message is from the game, parse the message
+      if(device_id == AirConsole.SCREEN){
+        //console.log(data);
+        
+        originalString = data;
+        
+        //parse data to get the tool and color for each button
+        splitString = originalString.split(",");
+        for(i = 0; i < splitString.length; i++)
+        {
+          toolAndColor = splitString[i].split(".");
+          //set url for tool image
+          if(toolAndColor[1] == "wrench")
+              tool = "wrench.png";
+          if(toolAndColor[1] == "hammer")
+              tool = "hammer.png";
+          if(toolAndColor[1] == "pliars")
+              tool = "pliars.png";
+          if(toolAndColor[1] == "tape")
+              tool ="tape.png";
+
+          //set background color and tool image for each button
+          if(i == 0){
+            document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("top-left-button").style.backgroundImage = url(tool);
+          }
+          if(i == 1){
+            document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("top-right-button").style.backgroundImage = url(tool);
+          }
+          if(i == 2){
+            document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
+          }
+          if(i == 3){
+            document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
+            document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
+          }
+        }
+
+      }
+    };
+
 
     App.prototype.sendMessageToScreen = function(msg){
       console.log("butotn pressed");
-      this.airconsole.message(AirConsole.SCREEN, {"action":msg});
+      var message = {
+        'action':msg,
+      }
+      this.airconsole.message(AirConsole.SCREEN, message);
     };
 
   </script>
 </head>
 <body onload="window.app = new App()">
   <!-- Add your HTML elements here -->
-  <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('interact1')">A</div>
-  <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('interact2')">B</div>
-  <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('interact3')">C</div>
-  <div class="button" id="bottom-right-button" ontouchstart="window.app.sendMessageToScreen('interact4')">D</div>
+
+  <!--game controlls-->
+  <div id="game-controlls">
+    <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('interact1')">A</div>
+    <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('interact2')">B</div>
+    <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('interact3')">C</div>
+    <div class="button" id="bottom-right-button" ontouchstart="window.app.sendMessageToScreen('interact4')">D</div>
+  </div>
+
+
+  <!--menu controlls-->
+  <div id="menu-controlls">
+    <div class="button" id="top-button" ontouchstart="window.app.sendMessageToScreen('play')"></div>
+    <div class="button" id="bottom-button" ontouchstart="window.app.sendMessageToScreen('credits')"></div>
+  </div>
+
+  <!--credits controlls-->
+  <div id="credits-controlls">
+    <div class="button" id="back-button" ontouchstart="window.app.sendMessageToScreen('back')"></div>
+  </div>
+
 </body>
 </html>
