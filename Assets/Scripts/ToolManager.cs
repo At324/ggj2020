@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Tool
+{
+    public string toolName;
+    public int toolIndex;
+    public Color toolColor;
+    public int colorIndex;
+    //public Sprite toolImage;
+};
+
 public class ToolManager : MonoBehaviour
 {
     public float toolScale = 1f, toolSpacing = 0.5f;
 
     public Transform toolArea; //Starting area on screen toolString appears
-
-    public struct Tool
-    {
-        public string toolName;
-        public Color toolColor;
-        //public Sprite toolImage;
-    };
 
     public List<GameObject> toolPrefabs;
 
@@ -22,6 +24,13 @@ public class ToolManager : MonoBehaviour
 
     [HideInInspector]
     public List<Tool> toolString = new List<Tool>(); //String of tools players have to match
+
+    [SerializeField]
+    private Sprite[] toolImages;
+    [SerializeField]
+    private GameObject iconPrefab;
+    [SerializeField]
+    private GameObject patternDisplay;
 
     private Color[] colors =
     {
@@ -133,8 +142,10 @@ public class ToolManager : MonoBehaviour
     Tool MakeTool(int players)
     {
         Tool new_tool;
-        new_tool.toolName = toolNames[Random.Range(0, toolNames.Length)];
-        new_tool.toolColor = colors[Random.Range(0, players <= 8 ? players : colors.Length)];
+        new_tool.toolIndex = Random.Range(0, toolNames.Length);
+        new_tool.toolName = toolNames[new_tool.toolIndex];
+        new_tool.colorIndex = Random.Range(0, players <= 8 ? players : colors.Length);
+        new_tool.toolColor = colors[new_tool.colorIndex];
         return new_tool;
     }
     
@@ -157,6 +168,12 @@ public class ToolManager : MonoBehaviour
         foreach (Tool t in toolString)
         {
             randomtools += t.toolColor.ToString() + " " + t.toolName + "\n";
+            GameObject new_prefab = Instantiate(iconPrefab);
+            PatternPiece pp = new_prefab.GetComponent<PatternPiece>();
+            pp.MyTool = t;
+            pp.ChangeUIImage(toolImages[t.toolIndex]);
+            pp.transform.parent = patternDisplay.transform;
+            new_prefab.GetComponent<UnityEngine.UI.Image>().color = t.toolColor;
         }
         Debug.Log(randomtools);
     }
