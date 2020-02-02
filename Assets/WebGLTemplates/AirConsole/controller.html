@@ -15,31 +15,24 @@
     position: absolute;
   }
 
-  #top-left-button{
+  #top-button{
+    background-image: url('play.png');
+    background-size: contain;
+    background-repeat: no-repeat;
   	left: 0;
     top: 0;
-  	width: 50%;
+  	width: 100%;
   	height: 50%;
   }
 
-  #top-right-button{
-  	right: 0;
-    top: 0;
-  	width: 50%;
-  	height: 50%;
-  }
 
-  #bottom-left-button{
+  #bottom-button{
+    background-image: url('credits.png');
+    background-size: contain;
+    background-repeat: no-repeat;
 	  left: 0;
   	bottom: 0;
-  	width: 50%;
-  	height: 50%;
-  }
-
-  #bottom-right-button{
-  	right: 0;
-  	bottom: 0;
-  	width: 50%;
+  	width: 100%;
   	height: 50%;
   }
 
@@ -80,20 +73,19 @@
       }
     }
 
-
-
     App.prototype.sendMessageToScreen = function(msg){
       console.log("butotn pressed");
-      this.airconsole.message(AirConsole.SCREEN, {"action":msg});
+      var message = {
+        'action':msg
+      }
+      this.airconsole.message(AirConsole.SCREEN, message);
     };
 
   </script>
 </head>
 <body onload="window.app = new App()">
   <!-- Add your HTML elements here -->
-  <div class="button" id="top-left-button" ontouchstart="window.app.sendMessageToScreen('interact1')">A</div>
-  <div class="button" id="top-right-button" ontouchstart="window.app.sendMessageToScreen('interact2')">B</div>
-  <div class="button" id="bottom-left-button" ontouchstart="window.app.sendMessageToScreen('interact3')">C</div>
-  <div class="button" id="bottom-right-button" ontouchstart="window.app.sendMessageToScreen('interact4')">D</div>
+  <div class="button" id="top-button" ontouchstart="window.app.sendMessageToScreen('play')">play</div>
+  <div class="button" id="bottom-button" ontouchstart="window.app.sendMessageToScreen('credits')">credits</div>
 </body>
 </html>
