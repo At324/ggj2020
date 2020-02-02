@@ -1,33 +1,56 @@
 
 <html>
 <head>
-    <script type="text/javascript"
-            src="https://www.airconsole.com/api/airconsole-1.7.0.js"></script>
-    <script type="text/javascript">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <script type="text/javascript" src="https://www.airconsole.com/api/airconsole-1.7.0.js"></script>
+  <style type=text/css>
+  /* the style sheet dictates what our elements (buttons, backgrounds etc.) will look like. */
+
+  .button{
+    background: #3B3B3B;
+    font-size: 14px;
+    padding: 5px 10px 5px 10px;
+    border: solid #1f1f1f 2px;
+    height: 100%;
+    position: absolute;
+  }
+
+  #top-button{
+  	left: 0;
+    top: 0;
+  	width: 100%;
+  	height: 50%;
+  }
+
+
+  #bottom-button{
+	  left: 0;
+  	bottom: 0;
+  	width: 100%;
+  	height: 50%;
+  }
+
+  </style>
+  
+  <script type="text/javascript">
 
     var airconsole;
-    /**
-     * Sets up the communication to the screen.
-     */
-    function init() {
-      airconsole = new AirConsole({"orientation": "portrait"});
-     
-      airconsole.onActivePlayersChange = function(player_number) {
-        updateText(player_number);
-      }
-      airconsole.onReady = function() {
-        updateText();
-      }
 
+    function App() {
+
+    /* JavaScript / Functionality. Add functions and evens here */ 
+
+      this.airconsole = new AirConsole({"orientation": "portrait"});
+      
       /*
-      * Here we are adding support for mouse events manually.
-      * --> WE STRONGLY ENCOURAGE YOU TO USE THE AIRCONSOLE CONTROLS LIBRARY
-      * WHICH IS EVEN BETTER (BUT WE DONT WANT TO BLOAT THE CODE HERE).
-      * https://github.com/AirConsole/airconsole-controls/
-      * 
-      * DO NOT USE ONCLICK HANDLERS.
-      * THEY ADD A 200MS DELAY!
-      */
+       * Here we are adding support for mouse events manually.
+       * --> WE STRONGLY ENCOURAGE YOU TO USE THE AIRCONSOLE CONTROLS LIBRARY
+       * WHICH IS EVEN BETTER (BUT WE DONT WANT TO BLOAT THE CODE HERE).
+       * https://github.com/AirConsole/airconsole-controls/
+       * 
+       * DO NOT USE ONCLICK HANDLERS.
+       * THEY ADD A 200MS DELAY!
+       */
       if (!("ontouchstart" in document.createElement("div"))) {
         var elements = document.getElementsByTagName("*");
         for (var i = 0; i < elements.length; ++i) {
@@ -44,77 +67,19 @@
       }
     }
 
-	function updateText(player_number) {
-	  var div = document.getElementById("player_id");
-      if (airconsole.getActivePlayerDeviceIds().length == 0) {
-        div.innerHTML = "Waiting for more players.";
-      } else if (player_number == undefined) {
-        div.innerHTML = "This is a 2 player game";
-      } else if (player_number == 0) {
-        div.innerHTML = "You are the player on the left";
-      } else if (player_number == 1) {
-        div.innerHTML = "You are the player on the right";
-      };
-	}
+    App.prototype.sendMessageToScreen = function(msg){
+      console.log("butotn pressed");
+      var message = {
+        'action':msg
+      }
+      this.airconsole.message(AirConsole.SCREEN, message);
+    };
 
-    /**
-     * Tells the screen to move the paddle of this player.
-     * @param amount
-     */
-    function move(amount) {
-      airconsole.message(AirConsole.SCREEN, {move: amount})
-    }
-
-    </script>
-    <style type="text/css">
-        @font-face {
-            font-family: 'Arial';
-        }
-
-        html, body {
-            height: 100%;
-            margin: 0px;
-            font-family: 'PressStart2P', sans-serif;
-            color: white;
-            text-align: center;
-            background-color: black;
-        }
-
-        .button {
-            display: inline-block;
-            height: 45%;
-            width: 98%;
-            background-color: #222;
-            position: relative;
-        }
-
-        .button_label {
-            position: absolute;
-            left: 0px;
-            width: 100%;
-            top: 50%;
-            margin-top: -6px;
-        }
-
-        #player_id {
-            position: absolute;
-            top: 50%;
-            left: 0%;
-            width: 100%;
-            margin-top: -8px;
-            color: #777;
-        }
-    </style>
+  </script>
 </head>
-<body onload="init()">
-    <div style="height: 1%"></div>
-    <div class=button ontouchstart="move(5)" ontouchend="move(0)">
-        <div class="button_label">UP</div>
-    </div>
-    <div style="height: 8%"></div>
-    <div class=button ontouchstart="move(-5)" ontouchend="move(0)">
-        <div class="button_label">DOWN</div>
-    </div>
-    <div id="player_id"></div>
+<body onload="window.app = new App()">
+  <!-- Add your HTML elements here -->
+  <div class="button" id="top-button" ontouchstart="window.app.sendMessageToScreen('play')">play</div>
+  <div class="button" id="bottom-button" ontouchstart="window.app.sendMessageToScreen('credits')">credits</div>
 </body>
 </html>
