@@ -1126,7 +1126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e633bb07422ac8d468f5317ded3fa472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 5
+  count: 20
   clock: {fileID: 0}
   clock2: {fileID: 1711806341}
   robotAnimator: {fileID: 1577707246}

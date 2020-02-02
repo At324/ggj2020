@@ -29,6 +29,7 @@ public class gameLogic : MonoBehaviour
             AirConsole.instance.SetActivePlayers(8);
             AirConsole.instance.Broadcast("game");
             Debug.Log("play game");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
         }
         if(data["action"] != null && data["action"].ToString().Equals("credits")){
             //load credits and credit controlls
@@ -55,7 +56,8 @@ public class gameLogic : MonoBehaviour
             buttonIndex = 2;
         else
             buttonIndex = 3;
-        GameManager.Instance.AddToolPressed(AirConsole.instance.ConvertPlayerNumberToDeviceId(player), buttonIndex);
+        //GameManager.Instance.AddToolPressed(AirConsole.instance.ConvertPlayerNumberToDeviceId(player), buttonIndex);
+        GameManager.Instance.AddToolPressed(player, buttonIndex);
     }
 
     void OnDestroy (){
