@@ -15,6 +15,17 @@
     position: absolute;
   }
 
+
+  #back-button{
+    background-image: url('back.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+  	left: 25%;
+    top: 25%;
+  	width: 50%;
+  	height: 50%;
+  }
+
   #top-button{
     background-image: url('play.png');
     background-size: contain;
@@ -181,6 +192,11 @@
   <div id="menu-controlls">
     <div class="button" id="top-button" ontouchstart="window.app.sendMessageToScreen('play')"></div>
     <div class="button" id="bottom-button" ontouchstart="window.app.sendMessageToScreen('credits')"></div>
+  </div>
+
+  <!--credits controlls-->
+  <div id="credits-controlls">
+    <div class="button" id="back-button" ontouchstart="window.app.sendMessageToScreen('back')"></div>
   </div>
 
 </body>

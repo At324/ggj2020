@@ -16,12 +16,16 @@ public class gameLogic : MonoBehaviour
     void OnMessage(int fromDeviceID, JToken data) {
         //Debug.Log("message from" + fromDeviceID + ", data: " + data);
 
+        if(data["action"] != null && data["action"].ToString().Equals("back")){
+            //load menu and menu controlls
+            Debug.Log("back");
+        }
         if(data["action"] != null && data["action"].ToString().Equals("play")){
-            //load game scene
+            //load game controlls and set active players one last time and start game
             Debug.Log("play game");
         }
         if(data["action"] != null && data["action"].ToString().Equals("credits")){
-            //load credits scene
+            //load credits and credit controlls
             Debug.Log("credits");
         }
         //pass player number and button pressed to other funtion
