@@ -93,6 +93,49 @@
       //if message is from the game, parse the message
       if(device_id == AirConsole.SCREEN){
         Console.log(data);
+        
+        originalString = data;
+        
+        //parse data to get the tool and color for each button
+        splitString = originalString.split(",");
+        for(i = 0; i < splitString.length(); i++)
+        {
+          toolAndColor = splitString[i].split(".");
+          //set url for tool image
+          switch(toolAndColor[1]){
+            case "wrench":
+              tool = "wrench.png";
+              break;
+            case "hammer":
+              tool = "hammer.png";
+              break;
+            case "pliars":
+              tool = "pliars.png";
+              break;
+            case "tape":
+              tool ="tape.png";
+              break;
+          }
+          //set background color and tool image for each button
+          switch(i){
+            case 0:
+              document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("top-left-button").style.backgroundImage = url(tool);
+              break;
+            case 1:
+              document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("top-right-button").style.backgroundImage = url(tool);
+              break;
+            case 2:
+              document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("bottom-left-button").style.backgroundImage = url(tool);
+              break;
+            case 3:
+              document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
+              document.getElementById("bottom-right-button").style.backgroundImage = url(tool);
+              break;
+          }
+        }
 
       }
     };
