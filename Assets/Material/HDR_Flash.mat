@@ -28,5 +28,5 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats: []
     m_Colors:
-    - Color_8B8C1B50: {r: 0.40741763, g: 0.40741763, b: 0.40741763, a: 0.92941177}
+    - Color_8B8C1B50: {r: 2.3245068, g: 0.70587116, b: 0, a: 1}
     - col: {r: 0, g: 0, b: 0, a: 0}
