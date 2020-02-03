@@ -94,7 +94,78 @@ public class GameManager : MonoBehaviour
             Debug.Log("active players set");
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Tool t;
+            t.colorIndex = 0;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 0;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            Tool t;
+            t.colorIndex = 0;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 1;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Tool t;
+            t.colorIndex = 0;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 2;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Tool t;
+            t.colorIndex = 0;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 3;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Tool t;
+            t.colorIndex = 1;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 0;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Tool t;
+            t.colorIndex = 1;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 1;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Tool t;
+            t.colorIndex = 1;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 2;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Tool t;
+            t.colorIndex = 1;
+            t.toolColor = ToolManager.Instance.Colors[t.colorIndex];
+            t.toolIndex = 3;
+            t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
+            playerEnteredTools.Add(t);
+        }
     }
 
     void FixedUpdate()
@@ -145,5 +216,101 @@ public class GameManager : MonoBehaviour
             //pass round
         //else
             //fail round
+            FailRound();
+        }
+
+        //clean up list
+        playerEnteredTools.Clear();
+        chosenToolPattern.Clear();
+        playerTools.Clear();
+        ToolManager.Instance.GenerateToolPool(AirConsole.instance.GetControllerDeviceIds().Count);
+        roundActive = false;
+        if (robotAnimator != null)
+        {
+            robotAnimator.SetTrigger("next");
+        }
+    }
+
+    public void GivePlayersTools()
+    {
+        //int[] player_ids = new int[8];
+        //AirConsole.instance.GetActivePlayerDeviceIds.CopyTo(player_ids, 0);
+        List<int> player_ids = AirConsole.instance.GetControllerDeviceIds();
+        int players = player_ids.Count;
+        playerTools.Clear();
+        //Debug.Log("players connected: " + player_ids.Count);
+        foreach (int i in player_ids)
+        {
+            playerTools.Add(i, new List<Tool>());
+        }
+        //List<string> eachPlayersTools = new List<string>();
+        string[] eachPlayersTools = new string[players];
+        Debug.Log("num players: " + players.ToString());
+
+        List<Tool> toolsToGiveOut = ToolManager.Instance.GenerateToolPool(players);
+        for (int i = 0; i < players; i++)
+        {
+            for (int j = 0; j < ToolManager.Instance.ToolNames.Length; j++)
+            {
+                Tool t;
+                t.toolIndex = j;
+                t.toolName = ToolManager.Instance.ToolNames[j];
+                t.colorIndex = i;
+                t.toolColor = ToolManager.Instance.Colors[i];
+                toolsToGiveOut.Add(t);
+            }
+        }
+
+        Shuffle(toolsToGiveOut);
+        for (int i = 0; i < toolsToGiveOut.Count; i++)
+        {
+            int p = i % players;
+            eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "." + toolsToGiveOut[i].toolName + ",";
+            //playerTools.Add(player_ids[p], toolsToGiveOut[i]);
+            //if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
+            //{
+                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            //}
+            /*else
+            {
+                playerTools[player_ids[p]] = new List<Tool>();
+                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            }*/
+        }
+
+        //Debug.Log("start");
+        int curr_player = 0;
+        foreach (string s in eachPlayersTools)
+        {
+            //Debug.Log(s);
+            Debug.Log("Sending msg [" + s.Remove(s.Length - 1).ToLower() + "] to player [" + player_ids[curr_player].ToString() + "]");
+            AirConsole.instance.Message(player_ids[curr_player], s.Remove(s.Length - 1).ToLower());
+            curr_player++;
+        }
+        //Debug.Log("end");
+    }
+
+    public void Shuffle<T>(IList<T> ts)
+    {
+        var count = ts.Count;
+        var last = count - 1;
+        for (var i = 0; i < last; ++i)
+        {
+            var r = UnityEngine.Random.Range(i, count);
+            var tmp = ts[i];
+            ts[i] = ts[r];
+            ts[r] = tmp;
+        }
+    }
+
+    public void AddToolPressed(int playerNum, int toolIndex)
+    {
+        //playerEnteredTools.Add(playerTools[playerNum][toolIndex]);
+        Tool t;
+        t.colorIndex = playerNum;
+        t.toolColor = ToolManager.Instance.Colors[playerNum];
+        t.toolIndex = toolIndex;
+        t.toolName = ToolManager.Instance.ToolNames[toolIndex];
+        playerEnteredTools.Add(t);
     }
 }

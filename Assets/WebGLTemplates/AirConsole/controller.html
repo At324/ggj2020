@@ -18,16 +18,6 @@
     background-position: center;
   }
 
-
-  #back-button{
-    background-image: url('back.png');
-    
-  	left: 25%;
-    top: 25%;
-  	width: 50%;
-  	height: 50%;
-  }
-
   #top-button{
     background-image: url('play.png');
   	left: 0;
@@ -43,38 +33,6 @@
   	bottom: 0;
   	width: 100%;
   	height: 50%;
-  }
-
-  #top-left-button{
-  	left: 0;
-    top: 0;
-  	width: 50%;
-  	height: 50%;
-    background-image: url('wrench.png');
-  }
-
-  #top-right-button{
-  	right: 0;
-    top: 0;
-  	width: 50%;
-  	height: 50%;
-    background-image: url('hammer.png');
-  }
-
-  #bottom-left-button{
-	  left: 0;
-  	bottom: 0;
-  	width: 50%;
-  	height: 50%;
-    background-image: url('pliers.png');
-  }
-
-  #bottom-right-button{
-  	right: 0;
-  	bottom: 0;
-  	width: 50%;
-  	height: 50%;
-    background-image: url('tape.png');
   }
 
   </style>
@@ -1614,77 +1572,19 @@ AirConsoleViewManager.prototype = {
       }
     }
 
-
-    AirConsole.prototype.onReady = function() {
-        // Init the ViewManager
-        //vm = new AirConsoleViewManager(airconsole);
-    };
-
-    AirConsole.prototype.onMessage = function(device_id, data) {
-      //if message is from the game, parse the message
-      if(device_id == AirConsole.SCREEN){
-        console.log(data);
-        AirConsoleViewManager.x = AirConsoleViewManager.x+1;
-        if(data == "credits"){
-          AirConsoleViewManager.prototype.controllersShow('credits-controlls');
-        }
-        else if(data == "game"){
-          AirConsoleViewManager.prototype.controllersShow('game-controlls');
-        }
-        else if(data == "menu"){
-          AirConsoleViewManager.prototype.controllersShow('menu-controlls');
-        }
-        else{
-          
-          3//parse data to get the tool and color for each button
-          originalString = data;
-          splitString = originalString.split(",");
-          for(i = 0; i < splitString.length; i++)
-          {
-            toolAndColor = splitString[i].split(".");
-            //set url for tool image
-            if(toolAndColor[1] == "wrench")
-                tool = 'wrench.png';
-            if(toolAndColor[1] == "hammer")
-                tool = 'hammer.png';
-            if(toolAndColor[1] == "pliars")
-                tool = 'pliars.png';
-            if(toolAndColor[1] == "tape")
-                tool ='tape.png';
-
-            //set background color and tool image for each button
-            if(i == 0){
-              document.getElementById("top-left-button").style.backgroundColor = toolAndColor[0];
-              //document.getElementById("top-left-button").style.backgroundImage = url('wrench.png');
-            }
-            if(i == 1){
-              document.getElementById("top-right-button").style.backgroundColor = toolAndColor[0];
-              //document.getElementById("top-right-button").style.backgroundImage = url('hammer.png');
-            }
-            if(i == 2){
-              document.getElementById("bottom-left-button").style.backgroundColor = toolAndColor[0];
-              //document.getElementById("bottom-left-button").style.backgroundImage = url('pliars.png');
-            }
-            if(i == 3){
-              document.getElementById("bottom-right-button").style.backgroundColor = toolAndColor[0];
-              //document.getElementById("bottom-right-button").style.backgroundImage = url('tape.png');
-            }
-//>>>>>>> controller
-          }
-        }
-      }
-    };
-
-
     App.prototype.sendMessageToScreen = function(msg){
       console.log("butotn pressed");
       var message = {
-        'action':msg,
+        'action':msg
       }
       this.airconsole.message(AirConsole.SCREEN, message);
     };
 
   </script>
-
+</head>
+<body onload="window.app = new App()">
+  <!-- Add your HTML elements here -->
+  <div class="button" id="top-button" ontouchstart="window.app.sendMessageToScreen('play')">play</div>
+  <div class="button" id="bottom-button" ontouchstart="window.app.sendMessageToScreen('credits')">credits</div>
 </body>
 </html>
