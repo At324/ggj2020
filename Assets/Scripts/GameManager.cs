@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using NDream.AirConsole;
-using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -49,42 +49,40 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("Timer")]
-    public float count = 300.0f;
+    public float count = 20.0f;
+    private float startingCount = 0f;
     public Text clock;
     public TextMeshProUGUI clock2;
+
+    private static List<Tool> playerEnteredTools = new List<Tool>();
+    private static List<Tool> chosenToolPattern = new List<Tool>();
+    public List<Tool> ChosenToolPattern
+    {
+        get
+        {
+            return chosenToolPattern;
+        }
+        set
+        {
+            chosenToolPattern = value;
+        }
+    }
+    private static Dictionary<int, List<Tool>> playerTools = new Dictionary<int, List<Tool>>();
+
+    [SerializeField]
+    private Animator robotAnimator;
+    private bool roundActive = false;
+
+    [SerializeField]
+    private AudioSource wack;
 
     // Start is called before the first frame update
     void Start()
     {
-        AirConsole.instance.onMessage += OnMessage;
-        AirConsole.instance.SetActivePlayers(8);
+        startingCount = count;
+        //wack = GetComponent<AudioSource>();
     }
 
-    void OnMessage(int fromDeviceID, JToken data)
-    {
-        //Debug.Log("message from" + fromDeviceID + ", data: " + data);
-
-        //pass player number and button pressed to other funtion
-        if (data["action"] != null)
-        {
-            sendInput(AirConsole.instance.ConvertDeviceIdToPlayerNumber(fromDeviceID), data["action"].ToString());
-        }
-    }
-
-    void sendInput(int player, string button)
-    {
-        //do something based on player number and button they pressed
-        Debug.Log("player " + player + " pressed button " + button);
-    }
-
-    void OnDestroy()
-    {
-        //unregister events
-        if (AirConsole.instance != null)
-        {
-            AirConsole.instance.onMessage -= OnMessage;
-        }
-    }
 
     void Update()
     {
@@ -92,6 +90,7 @@ public class GameManager : MonoBehaviour
         {
             AirConsole.instance.SetActivePlayers(8);
             Debug.Log("active players set");
+            wack.Play();
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -102,6 +101,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 0;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -111,6 +111,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 1;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -120,6 +121,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 2;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -129,6 +131,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 3;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -138,6 +141,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 0;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -147,6 +151,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 1;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -156,6 +161,7 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 2;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -165,12 +171,14 @@ public class GameManager : MonoBehaviour
             t.toolIndex = 3;
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
+            wack.Play();
         }
     }
 
     void FixedUpdate()
     {
-        count -= Time.deltaTime;
+        if (roundActive)
+            count -= Time.deltaTime;
         if (count < 0.0f)
             count = 0.0f;
 
@@ -180,10 +188,19 @@ public class GameManager : MonoBehaviour
         if (clock2 != null)
             clock2.text = "" + Mathf.Round(count);
 
-        if (count < 0)
+        if (count <= 0 && roundActive)
         {
             EndRound();
         }
+    }
+
+    public void StartRound()
+    {
+        count = startingCount;
+        roundActive = true;
+        ToolManager.Instance.InstatiateRandomToolString(AirConsole.instance.GetControllerDeviceIds().Count);
+        GivePlayersTools();
+        //RobotGenerator.Instance.RandomizeRobot();
     }
 
     /**
@@ -194,9 +211,13 @@ public class GameManager : MonoBehaviour
         round_num++;
         difficulty_modifier += Random.Range(0.25f, 1.0f);
 
-        RobotGenerator.Instance.RandomizeRobot();
+        //RobotGenerator.Instance.RandomizeRobot();
 
-        Debug.LogFormat("Round number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
+        Debug.LogFormat("Round passed!\nRound number [%i] Difficulty modifier [%f]", round_num, difficulty_modifier);
+        /*if (robotAnimator != null)
+        {
+            robotAnimator.SetTrigger("next");
+        }*/
     }
 
     /**
@@ -204,7 +225,12 @@ public class GameManager : MonoBehaviour
      */
     public void FailRound()
     {
+        Debug.Log("Round failed! You made it to round " + round_num.ToString());
+    }
 
+    public bool ContainsSubsequence<T>(List<T> sequence, List<T> subsequence)
+    {
+        return Enumerable.Range(0, sequence.Count - subsequence.Count + 1).Any(n => sequence.Skip(n).Take(subsequence.Count).SequenceEqual(subsequence));
     }
 
     /**
@@ -213,8 +239,13 @@ public class GameManager : MonoBehaviour
     public void EndRound()
     {
         //if pattern correct
+        if (ContainsSubsequence(playerEnteredTools, chosenToolPattern))
+        {
             //pass round
-        //else
+            PassRound();
+        }
+        else
+        {
             //fail round
             FailRound();
         }
@@ -269,7 +300,7 @@ public class GameManager : MonoBehaviour
             //playerTools.Add(player_ids[p], toolsToGiveOut[i]);
             //if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
             //{
-                playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
+            playerTools[player_ids[p]].Add(toolsToGiveOut[i]);
             //}
             /*else
             {
