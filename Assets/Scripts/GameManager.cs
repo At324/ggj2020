@@ -189,6 +189,11 @@ public class GameManager : MonoBehaviour
         //RobotGenerator.Instance.RandomizeRobot();
     }
 
+    public void FlipActiveState(GameObject thingie)
+    {
+        thingie.SetActive(!thingie.activeSelf);
+    }
+
     /**
      * @brief Increments round number and difficulty modifier
      */
