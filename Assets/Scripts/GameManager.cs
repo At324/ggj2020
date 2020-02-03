@@ -219,9 +219,23 @@ public class GameManager : MonoBehaviour
         Debug.Log("Round failed! You made it to round " + round_num.ToString());
     }
 
-    public bool ContainsSubsequence<T>(List<T> sequence, List<T> subsequence)
+    public bool ToolsAreEqual(Tool t1, Tool t2)
     {
-        return Enumerable.Range(0, sequence.Count - subsequence.Count + 1).Any(n => sequence.Skip(n).Take(subsequence.Count).SequenceEqual(subsequence));
+        if (t1.toolColor == t2.toolColor && t1.toolName == t2.toolName)
+            return true;
+        return false;
+    }
+
+    public bool ContainsSubsequence(List<Tool> sequence, List<Tool> subsequence)
+    {
+        int i = 0;
+        foreach (Tool t in sequence)
+        {
+            if (!ToolsAreEqual(t, subsequence[i]))
+                return false;
+            i++;
+        }
+        return true;
     }
 
     /**
