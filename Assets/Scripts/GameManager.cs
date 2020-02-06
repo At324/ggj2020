@@ -361,5 +361,7 @@ public class GameManager : MonoBehaviour
         t.toolIndex = toolIndex;
         t.toolName = ToolManager.Instance.ToolNames[toolIndex];
         playerEnteredTools.Add(t);
+
+        Debug.Log("BUTTON PUSH");
     }
 }

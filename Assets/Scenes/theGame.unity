@@ -938,7 +938,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   count: 20
-  clock: {fileID: 0}
   clock2: {fileID: 226588910}
   robotAnimator: {fileID: 1121225964}
   wack: {fileID: 1121225965}
