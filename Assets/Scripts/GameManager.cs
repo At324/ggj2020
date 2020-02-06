@@ -51,7 +51,6 @@ public class GameManager : MonoBehaviour
     [Header("Timer")]
     public float count = 20.0f;
     private float startingCount = 0f;
-    public Text clock;
     public TextMeshProUGUI clock2;
 
     private static List<Tool> playerEnteredTools = new List<Tool>();
@@ -80,6 +79,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         startingCount = count;
+        robotAnimator.SetTrigger("wiggle");
         //wack = GetComponent<AudioSource>();
     }
 
@@ -91,7 +91,8 @@ public class GameManager : MonoBehaviour
             AirConsole.instance.SetActivePlayers(8);
             Debug.Log("active players set");
             wack.Play();
-        }
+           
+}
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -102,6 +103,7 @@ public class GameManager : MonoBehaviour
             t.toolName = ToolManager.Instance.ToolNames[t.toolIndex];
             playerEnteredTools.Add(t);
             wack.Play();
+          
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -181,9 +183,6 @@ public class GameManager : MonoBehaviour
             count -= Time.deltaTime;
         if (count < 0.0f)
             count = 0.0f;
-
-        //string minutes = ((int)count / 60).ToString();
-        //string seconds = (count % 60).ToString("f2");
 
         if (clock2 != null)
             clock2.text = "" + Mathf.Round(count);
