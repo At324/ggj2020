@@ -16,7 +16,7 @@ public class gameLogic : MonoBehaviour
 
     //handles input for the game
     void OnMessage(int fromDeviceID, JToken data) {
-        //Debug.Log("message from" + fromDeviceID + ", data: " + data);
+        Debug.Log("message from" + fromDeviceID + ", data: " + data);
 
         if(data["action"] != null && data["action"].ToString().Equals("back")){
             //load menu and menu controlls

@@ -75,6 +75,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private AudioSource wack;
 
+    [Header("DEBUG")]
+    [SerializeField]
+    private string TOOLS_I_PUSHED = "";
+    [SerializeField]
+    private Text TOOLS_PUSHED;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -187,6 +193,9 @@ public class GameManager : MonoBehaviour
         if (clock2 != null)
             clock2.text = "" + Mathf.Round(count);
 
+        if (TOOLS_PUSHED != null)
+            TOOLS_PUSHED.text = TOOLS_I_PUSHED;
+
         if (count <= 0 && roundActive)
         {
             EndRound();
@@ -195,6 +204,7 @@ public class GameManager : MonoBehaviour
 
     public void StartRound()
     {
+        AirConsole.instance.SetActivePlayers(8);
         count = startingCount;
         roundActive = true;
         ToolManager.Instance.InstatiateRandomToolString(AirConsole.instance.GetControllerDeviceIds().Count);
@@ -297,7 +307,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("num players: " + players.ToString());
 
         List<Tool> toolsToGiveOut = ToolManager.Instance.GenerateToolPool(players);
-        for (int i = 0; i < players; i++)
+        /*for (int i = 0; i < players; i++)
         {
             for (int j = 0; j < ToolManager.Instance.ToolNames.Length; j++)
             {
@@ -308,12 +318,13 @@ public class GameManager : MonoBehaviour
                 t.toolColor = ToolManager.Instance.Colors[i];
                 toolsToGiveOut.Add(t);
             }
-        }
+        }*/
 
-        Shuffle(toolsToGiveOut);
+        //Shuffle(toolsToGiveOut);
         for (int i = 0; i < toolsToGiveOut.Count; i++)
         {
-            int p = i % players;
+            int p = i / 4;
+            Debug.Log("Giving tool " + i.ToString() + " to player " + p.ToString());
             eachPlayersTools[p] += ToolManager.Instance.ColorNames[toolsToGiveOut[i].colorIndex].ToString() + "." + toolsToGiveOut[i].toolName + ",";
             //playerTools.Add(player_ids[p], toolsToGiveOut[i]);
             //if (playerTools[player_ids[p]] != null && !playerTools[player_ids[p]].Any<Tool>())
@@ -362,6 +373,6 @@ public class GameManager : MonoBehaviour
         t.toolName = ToolManager.Instance.ToolNames[toolIndex];
         playerEnteredTools.Add(t);
 
-        Debug.Log("BUTTON PUSH");
+        TOOLS_I_PUSHED += "Tool " + t.toolName + " Color " + playerNum.ToString() + "\n";
     }
 }

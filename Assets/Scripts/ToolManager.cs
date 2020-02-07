@@ -45,7 +45,7 @@ public class ToolManager : MonoBehaviour
     [SerializeField]
     private GameObject patternDisplay;
 
-    private Color[] colors =
+    public Color[] Colors =
     {
         Color.red,
         Color.green,
@@ -56,13 +56,13 @@ public class ToolManager : MonoBehaviour
         Color.cyan,
         new Color(153f / 255f, 51f / 255f, 1.0f)
     };
-    public Color[] Colors
+    /*public Color[] Colors
     {
         get
         {
             return colors;
         }
-    }
+    }*/
 
     private string[] colorNames =
     {
@@ -151,7 +151,7 @@ public class ToolManager : MonoBehaviour
                     currentColor = new Color(153f, 51f, 255f); break; //Purple Violet
             }*/
 
-            currentColor = colors[i];
+            currentColor = Colors[i];
             //Tool Loop
 
             for(int j = 0; j < 4; j++)
@@ -171,8 +171,11 @@ public class ToolManager : MonoBehaviour
                         tool.toolName = "Tape"; break;        
                 }*/
                 tool.toolName = toolNames[j];
+                tool.colorIndex = i;
+                tool.toolIndex = j;
 
                 toolList.Add(tool);
+                Debug.LogFormat("Added tool color {0}, name {1}", tool.toolColor.ToString(), tool.toolName);
             }
 
         }
@@ -190,8 +193,8 @@ public class ToolManager : MonoBehaviour
         Tool new_tool;
         new_tool.toolIndex = Random.Range(0, toolNames.Length);
         new_tool.toolName = toolNames[new_tool.toolIndex];
-        new_tool.colorIndex = Random.Range(0, players <= 8 ? players : colors.Length);
-        new_tool.toolColor = colors[new_tool.colorIndex];
+        new_tool.colorIndex = Random.Range(0, players <= 8 ? players : Colors.Length);
+        new_tool.toolColor = Colors[new_tool.colorIndex];
         return new_tool;
     }
 
